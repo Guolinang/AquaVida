@@ -11,6 +11,7 @@
 Для этого введите в консоль следующие команды:
 
 ```Bash
+chcp 1252
 psql -U postgres
 ```
 
@@ -18,15 +19,18 @@ psql -U postgres
 
 ```Bash
 CREATE USER aqua WITH PASSWORD '123';
+CREATE DATABASE aqua;
 ```
 
-Войдите в psql от имени пользователя aqua и выполните следующие шаги
+Дать права доступа на чтение и запись пользователю aqua от имени postgres и запустить скрипт
 
 ```Bash
-psql -U aqua postgres
-CREATE DATABASE aqua;
 \c aqua
+GRANT ALL PRIVILEGIES ON DATABASE aqua TO aqua;
+GRANT pg_read_all_data TO aqua;
+GRANT pg_write_all_data TO aqua;
 \i postgresql/Aqua.sql
+
 ```
 
 После этого можно запустить исполняемый файл AquaVida.exe или собрать приложение из исходников
