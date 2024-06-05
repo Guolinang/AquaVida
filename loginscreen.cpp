@@ -33,11 +33,14 @@ void LoginScreen::Log_In()
 
     QString email=ui->Edit_Email->text();
     QString password=ui->Edit_Password->text();
+
+    //Проверка, что поля заполнены
     if (email==""||password=="")
     {
         ui->Label_Message->setText("Все поля должны быть заполнены");
         return;
     }
+    //Поиск пользователя в базе данных и проверка пароля
     q.exec("SELECT password FROM users WHERE email=\'"+email+"\';");
     if (q.next())
     {
@@ -63,10 +66,13 @@ void LoginScreen::Registration(){
     QString email=ui->Edit_Email->text();
     QString login=ui->Edit_Name->text();
     QString password=ui->Edit_Password->text();
+
+    //Проверка введенных значений через валидатор
     QRegularExpression regLogPass("[a-zA-Z0-9]{1,20}");
     QRegularExpression regEmail("^[A-Z0-9a-z._-]{1,}@(\\w+)(\\.(\\w+))(\\.(\\w+))?(\\.(\\w+))?$");
     QRegularExpressionValidator regLogPassVal(regLogPass);
     QRegularExpressionValidator regEmailVal(regEmail);
+
     int pos=0;
     if (regEmailVal.validate(email,pos)!=QValidator::Acceptable)
     {
@@ -83,15 +89,18 @@ void LoginScreen::Registration(){
         ui->Label_Message->setText("Неверный символ в пароле");
         return;
     }
+
+    //Проверка на уникательность почты
     q.exec("SELECT login FROM users WHERE email=\'"+email+"\';");
     if (q.next())
     {
         ui->Label_Message->setText("Пользователь с такой почтой уже существует");
         return;
     }
+
+    //Создание нового пользователя, если все проверки пройдены
     QString query("INSERT INTO users(login,password,email) VALUES(\'"+login+"\',\'"+password+"\',\'"+email+"\');");    
     q.exec(query);
-
     ui->Label_Message->setText("Пользователь успешно создан");
     ui->Edit_Email->clear();
     ui->Edit_Name->clear();
@@ -100,6 +109,7 @@ void LoginScreen::Registration(){
 
 void LoginScreen::on_Button_Registration_clicked()
 {
+    //Смена подписей у кнопок и лейблов в зависимоти от режима
     if (isLogIn)
     {
         ui->Button_Registration->setText("Авторизация");

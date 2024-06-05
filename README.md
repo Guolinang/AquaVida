@@ -55,22 +55,29 @@ CREATE DATABASE aqua;
 ### Скриншоты интерфейса приложения
 
 ![Экран авторизации](/images/LogIn.png)
+
 Экран авторизации
 
 ![Главное окно](/images/MainWindow.png)
+
 Главное окно
 
 ![Добавление нового](/images/AddNew.png)
+
 Добавление новой записи
 
 ![Фильтрация](/images/Filter.png)
+
 Фильтрация
 
 ![Отчёт по клиентам](/images/ReportClients.png)
+
 Отчёт по клиентам
 
 ![Отчёт по товарам](/images/ReportProducts.png)
+
 Отчёт по товарам
 
 ![Отчёт по заказам](/images/ReportOrders.png)
+
 Отчёт по заказам

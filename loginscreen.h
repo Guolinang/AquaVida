@@ -20,12 +20,22 @@ public:
     explicit LoginScreen(QSqlDatabase* db,QWidget *parent = nullptr);
     ~LoginScreen();
 signals:
+
+    //Сигнат при успешной авторизации
     void SuccessLog();
 
 private slots:
+
+    //Проверка корректности заполененных полей и данных пользователя
     void Log_In();
+
+    //Регистрация нового пользователя в базу данных
     void Registration ();
+
+    //Переключение режимов регистрации и авторизации
     void on_Button_Registration_clicked();
+
+    //Запуск проверки или регистрации
     void on_Button_Enter_clicked();
 
 private:

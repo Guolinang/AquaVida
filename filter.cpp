@@ -2,6 +2,10 @@
 #include "ui_filter.h"
 
 
+//Функция принимает следующие аргументы:
+//isC - флаг создание/фильтрации;
+//query - ссылка на QSqlQuery,подключенную к бд
+//redactors - Список с полями таблицы и типами редакторов
 Filter::Filter(int isC, QSqlQuery & query,QList<QVector<QString>>& redactors,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Filter)
@@ -9,6 +13,8 @@ Filter::Filter(int isC, QSqlQuery & query,QList<QVector<QString>>& redactors,QWi
     ui->setupUi(this);
     isCreate=isC;
     QWidget* widget;
+
+
     header=new QLabel;
     header->setStyleSheet("font-weight:bold;font-size: 15px;");
     if (isC)
@@ -16,11 +22,14 @@ Filter::Filter(int isC, QSqlQuery & query,QList<QVector<QString>>& redactors,QWi
     else
        {header->setText("Выберите поля для фильтрации и заполните их");ui->Button_CF->setText("Отфильтровать");}
     ui->Layot_V->addWidget(header);
+
+
+
+    //Генерация элементов формы в зависимости от полей таблицы и режима (фильтрация или создание)
     QWidget* name;
-    qDebug()<<redactors;
     for (auto &it:redactors)
     {
-        if (it[0]=="")
+        if (it[0]=="") //Если поле не имеет внешнего ключа, то it[0]=="" и в it[1] хранитсья тип редактора
         {
 
             if (it[1]=="SpinBox")
@@ -44,7 +53,7 @@ Filter::Filter(int isC, QSqlQuery & query,QList<QVector<QString>>& redactors,QWi
             }
 
         }
-        else
+        else //Иначе если поле имеет внешний ключ, то it[0] хранит название таблицы, а it[1] название поля
         {
             if (it[1]=="status"&&isC==1)
                 continue;
@@ -75,11 +84,14 @@ Filter::~Filter()
 }
 
 
+
 void Filter::on_Button_CF_clicked()
 {
+    //В зависимости от типа поля, мы получаем данных из  него
+
     QVariant value;
     QList<QVariant>* list=new QList<QVariant>;
-    if (!isCreate)
+    if (!isCreate) //При фильтрации
     {
 
         for (int i=2;i<ui->Layot_V->count();i=i+2 )
@@ -109,7 +121,7 @@ void Filter::on_Button_CF_clicked()
         }
         emit filterA(list);
     }
-    else
+    else//При создании
     {
         for (int i=2;i<ui->Layot_V->count();i=i+2 )
         {

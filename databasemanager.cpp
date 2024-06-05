@@ -32,8 +32,11 @@ DataBaseManager::~DataBaseManager()
     delete ui;
 }
 
+
 void DataBaseManager::initDictionary()
 {
+    //Первое поле - названиеТаблицы_названиеСтолбца
+    //Второе поле - русский перевод подписи столбца
     dictionary.insert("orders_clients_name_2","Клиент");
     dictionary.insert("orders_name","Продукт");
     dictionary.insert("orders_quantity","Количество");
@@ -48,7 +51,9 @@ void DataBaseManager::initDictionary()
     dictionary.insert("clients_phone","Номер телефона");
     dictionary.insert("clients_email","Почта");
     dictionary.insert("clients_address","Адрес");
-    ////
+
+    //Первое поле - названиеТаблицы_названиеСтолбца
+    //Второе поле -  если внешний ключ: (НазваниеТаблицы, ПолеВНей), иначе ("",ТипРедактора)
     redactors.insert("orders_clients_name_2",QPair("clients","name"));
     redactors.insert("orders_name",QPair("products","name"));
     redactors.insert("orders_quantity",QPair("","SpinBox"));
@@ -65,6 +70,7 @@ void DataBaseManager::initDictionary()
     redactors.insert("clients_address",QPair("","LineEdit"));
 
 }
+
 
 void DataBaseManager::translateHeaders(QString name)
 {
@@ -121,11 +127,17 @@ void DataBaseManager::on_Button_Cancel_clicked()
 }
 
 void DataBaseManager::initForm(int b){
+
     QSqlQuery query(*db);
     QList<QVector<QString>> listVec;
     QSqlRecord header=dbModel->record();
     QVector<QString> vector;
     QPair<QString,QString> pair;
+
+    //В зависимости от заголовков находим в redactors нужный редактор
+    //Или данные для поиска значений внешнего ключа для комбобокса
+    //vector хранит в себе [НазваниеВнешнейТаблицы, НазваниеСтолбца, НазваниеТекущейКолонкиТекущейТаблицы ] для внешних ключей
+    //или ["",ТипРедактора, НазваниеТекущейКолонкиТекущейТаблицы] для остальных
     for (int i = 1; i < header.count(); ++i) {
         pair=redactors[dbModel->tableName()+"_"+header.fieldName(i)];
         vector.push_back(pair.first);
@@ -136,9 +148,9 @@ void DataBaseManager::initForm(int b){
     }    
     filter=new Filter(b,query,listVec);    
     connect(filter,SIGNAL(filterA(QList<QVariant>*)),this,SLOT(slotFilter(QList<QVariant>*)));
-    connect(filter,SIGNAL(createA(QList<QVariant>*)),this,SLOT(slotCreate(QList<QVariant>*)));    filter->exec();
+    connect(filter,SIGNAL(createA(QList<QVariant>*)),this,SLOT(slotCreate(QList<QVariant>*)));
+    filter->exec();
     dbModel->sort(0,Qt::AscendingOrder);
-
     delete filter;
 }
 
@@ -247,6 +259,7 @@ void DataBaseManager::on_Button_Report_clicked()
 
 void DataBaseManager::reportClient()
 {
+    //Генерация отчета в формате html по клиентам
     QString doc;
     doc="<!DOCTYPE HTML>\n"
         "<html>"
@@ -298,6 +311,7 @@ void DataBaseManager::reportClient()
 
 void DataBaseManager::reportProduct()
 {
+     //Генерация отчета в формате html по продуктам
     QString doc;
     doc="<!DOCTYPE HTML>\n"
         "<html>"
@@ -357,7 +371,7 @@ void DataBaseManager::reportProduct()
 
 void DataBaseManager::reportOrder()
 {
-
+    //Генерация отчета в формате html по заказам
     QString doc;
     doc="<!DOCTYPE HTML>\n"
         "<html>"
