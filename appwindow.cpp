@@ -9,9 +9,9 @@ AppWindow::AppWindow(QWidget *parent) :
     ui->setupUi(this);  
     db=QSqlDatabase::addDatabase("QPSQL");
     db.setHostName("localhost");
-    db.setUserName("postgres");
+    db.setUserName("aqua");
     db.setPassword("123");
-    db.setDatabaseName("Aqua");
+    db.setDatabaseName("aqua");
     if (!db.open())
     {
         qDebug()<<db.lastError();
