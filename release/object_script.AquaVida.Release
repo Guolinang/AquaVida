@@ -1,0 +1,10 @@
+release/appwindow.o
+release/databasemanager.o
+release/filter.o
+release/loginscreen.o
+release/main.o
+release/qrc_res.o
+release/moc_appwindow.o
+release/moc_databasemanager.o
+release/moc_filter.o
+release/moc_loginscreen.o
